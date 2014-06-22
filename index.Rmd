@@ -1,26 +1,128 @@
 ---
-title       : Test deck
-subtitle    : 
-author      : 
-job         : 
+title       : Dining Map SG
+subtitle    : Documentation Deck
+author      : PCommodore
+job         : Academic
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
-hitheme     : tomorrow      # 
+hitheme     : tomorrow     # 
 widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
 ---
 
-## Read-And-Delete
+## Overview
 
-1. Edit YAML front matter
-2. Write using R Markdown
-3. Use an empty line followed by three dashes to separate slides!
 
---- .class #id 
+This is the documentation file for Dining Map SG, a shiny app for displaying the opening hours of restaurants in Singapore. The app is developed in R Studio with shiny, leaflet, rcharts, googlevis packages. The app pulls data from facebook via the graph api in json format at regular intervals and display quick statistics and operating statuses of restaurants in the form of a map. The app also displays quick facebook statistics, charts, graphs and other related information for each restaurant.
 
-## Slide 2
+Have you visited a restaurant in the middle of the day/night only to find that they are closed for the day or for dinner preps? If so, Dining Map SG is for you. All source codes for this project are available on Git Hub at the following <a href="https://github.com/pcommodore/restaurantsmap">link</a>.
 
-```{r, fig.height=5, fig.width=5}
-plot(1 : 10, 1 : 10)
+---
+
+## Data Extraction
+
+<p>Data is extracted from Facebook Pages via the graph api in json format. The data is converted into a master data frame where information is subsequently used for display on the app. The following code chunk shows the data extraction function. </p>
+
+```{r}
+###Data extraction function - getData()
+
+restaurantslist = 'lesamisrestaurant,bibigo.singapore,kisekirestaurant' #Example restaurant list
+
+getData <- function(rlist = restaurantslist){
+  require(httr)
+  url = sprintf('https://graph.facebook.com/?ids=%s', rlist)
+  restaurants = fromJSON(url)
+  lapply(restaurants, function(rest){within(rest, { 
+    latitude = as.numeric(location$latitude)
+    longitude = as.numeric(location$longitude)
+    #location$latitude <- location$longitude <- NULL
+    })
+  })
+  
+}
 ```
+---
+
+## Data Presentation I 
+
+<p> Data extracted goes into a data frame (restaurantdf) which is subsequently used to plot a map based on their respective latitudes and longitudes. Snippets of the functions restaurantdf() (for converting json to data frame) and plotMapList() (for plotting restaurants and their statuses on map) are as follows. Note that these are just snippets and are meant for display purpose only.</p>
+
+```{r}
+###Data presentation function I - restaurantdf()
+
+restaurantdf <- function(){
+  
+  jsonlist = getData();
+  Sys.setenv(TZ='Asia/Kuala_Lumpur');
+  time = Sys.time();
+  
+  numofvariables = 39
+  data = matrix(0,length(names(jsonlist)), numofvariables)
+  data = data.frame(data)
+  # ...
+  }
+  
+```
+---
+## Data Presentation II
+
+```{r}
+###Data presentation function II - plotMapList()
+
+plotMapList <- function(dataset = restaurantdf(), mapcenter = c(1.373607, 103.804476), mapzoom = 11, width = 835, height = 550){
+  mapdf = dataset  
+  maplist = toJSONArray2(mapdf, json = F)
+  
+  map = Leaflet$new()
+  map$set(width = width, height = height)
+  map$setView(mapcenter, mapzoom)
+  
+  ###Add content for popup
+  # ...
+  
+  ###Add restaurants to map
+  # ...
+  
+  ###Show Map
+  # ...
+  }
+  
+```
+---
+
+## Data Analysis I
+
+<p> As part of the data analysis module, the googleVis package is used for displaying charts and time series graph so as to facilitate further data exploration and analysis.</p>
+
+```{r echo=TRUE,results='hide'}
+#Require googleVis
+library(googleVis)
+```
+
+---
+
+## Data Analysis II
+```{r echo=TRUE, results='hide'}
+###Sample Bar Chart Code
+df1 = data.frame(name='Les Amis Restaurant',
+                   likes= 1142,
+                   talking= 32,
+                   here= 1218)
+  
+  gvisBarChart(df1,
+                   options=list(width=350,height=280,
+                                title = "Quick Facebook Stats for Les Amis Restaurant",backgroundColor="#ffffff",
+                                hAxis="{title:'Numbers', titleTextStyle:{color:'blue'}}",
+                                vAxis="{title:'Stats', titleTextStyle:{color:'blue'}}"
+                                ))
+
+```
+
+--- 
+
+## Conclusion
+
+<p>The app can be found on shinyapps.io at the following <a href="https://pcommodore.shinyapps.io/RestaurantsMap/">url</a> :) </p>
+
 
