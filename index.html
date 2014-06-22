@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test deck</title>
+  <title>Dining Map SG</title>
   <meta charset="utf-8">
-  <meta name="description" content="Test deck">
-  <meta name="author" content="">
+  <meta name="description" content="Dining Map SG">
+  <meta name="author" content="PCommodore">
   <meta name="generator" content="slidify" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -32,9 +32,9 @@
     <!-- LOGO SLIDE -->
         <slide class="title-slide segue nobackground">
   <hgroup class="auto-fadein">
-    <h1>Test deck</h1>
-    <h2></h2>
-    <p><br/></p>
+    <h1>Dining Map SG</h1>
+    <h2>Documentation Deck</h2>
+    <p>PCommodore<br/>Academic</p>
   </hgroup>
   <article></article>  
 </slide>
@@ -43,28 +43,155 @@
     <!-- SLIDES -->
     <slide class="" id="slide-1" style="background:;">
   <hgroup>
-    <h2>Read-And-Delete</h2>
+    <h2>Overview</h2>
   </hgroup>
   <article data-timings="">
-    <ol>
-<li>Edit YAML front matter</li>
-<li>Write using R Markdown</li>
-<li>Use an empty line followed by three dashes to separate slides!</li>
-</ol>
+    <p>This is the documentation file for Dining Map SG, a shiny app for displaying the opening hours of restaurants in Singapore. The app is developed in R Studio with shiny, leaflet, rcharts, googlevis packages. The app pulls data from facebook via the graph api in json format at regular intervals and display quick statistics and operating statuses of restaurants in the form of a map. The app also displays quick facebook statistics, charts, graphs and other related information for each restaurant.</p>
+
+<p>Have you visited a restaurant in the middle of the day/night only to find that they are closed for the day or for dinner preps? If so, Dining Map SG is for you. All source codes for this project are available on Git Hub at the following <a href="https://github.com/pcommodore/restaurantsmap">link</a>.</p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="class" id="id" style="background:;">
+<slide class="" id="slide-2" style="background:;">
   <hgroup>
-    <h2>Slide 2</h2>
+    <h2>Data Extraction</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="r">plot(1:10, 1:10)
+    <p>Data is extracted from Facebook Pages via the graph api in json format. The data is converted into a master data frame where information is subsequently used for display on the app. The following code chunk shows the data extraction function. </p>
+
+<pre><code class="r">### Data extraction function - getData()
+
+restaurantslist = &quot;lesamisrestaurant,bibigo.singapore,kisekirestaurant&quot;  #Example restaurant list
+
+getData &lt;- function(rlist = restaurantslist) {
+    require(httr)
+    url = sprintf(&quot;https://graph.facebook.com/?ids=%s&quot;, rlist)
+    restaurants = fromJSON(url)
+    lapply(restaurants, function(rest) {
+        within(rest, {
+            latitude = as.numeric(location$latitude)
+            longitude = as.numeric(location$longitude)
+            # location$latitude &lt;- location$longitude &lt;- NULL
+        })
+    })
+
+}
 </code></pre>
 
-<p><img src="assets/fig/unnamed-chunk-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Data Presentation I</h2>
+  </hgroup>
+  <article data-timings="">
+    <p> Data extracted goes into a data frame (restaurantdf) which is subsequently used to plot a map based on their respective latitudes and longitudes. Snippets of the functions restaurantdf() (for converting json to data frame) and plotMapList() (for plotting restaurants and their statuses on map) are as follows. Note that these are just snippets and are meant for display purpose only.</p>
+
+<pre><code class="r">### Data presentation function I - restaurantdf()
+
+restaurantdf &lt;- function() {
+
+    jsonlist = getData()
+    Sys.setenv(TZ = &quot;Asia/Kuala_Lumpur&quot;)
+    time = Sys.time()
+
+    numofvariables = 39
+    data = matrix(0, length(names(jsonlist)), numofvariables)
+    data = data.frame(data)
+    # ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Data Presentation II</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">### Data presentation function II - plotMapList()
+
+plotMapList &lt;- function(dataset = restaurantdf(), mapcenter = c(1.373607, 103.804476), 
+    mapzoom = 11, width = 835, height = 550) {
+    mapdf = dataset
+    maplist = toJSONArray2(mapdf, json = F)
+
+    map = Leaflet$new()
+    map$set(width = width, height = height)
+    map$setView(mapcenter, mapzoom)
+
+    ### Add content for popup ...
+
+    ### Add restaurants to map ...
+
+    ### Show Map ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Data Analysis I</h2>
+  </hgroup>
+  <article data-timings="">
+    <p> As part of the data analysis module, the googleVis package is used for displaying charts and time series graph so as to facilitate further data exploration and analysis.</p>
+
+<pre><code class="r"># Require googleVis
+library(googleVis)
+</code></pre>
+
+<pre><code>## 
+## Welcome to googleVis version 0.5.2
+## 
+## Please read the Google API Terms of Use
+## before you use the package:
+## https://developers.google.com/terms/
+## 
+## Note, the plot method of googleVis will by default use
+## the standard browser to display its output.
+## 
+## See the googleVis package vignettes for more details.
+## 
+## To suppress the this message use:
+## suppressPackageStartupMessages(library(googleVis))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Data Analysis II</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">### Sample Bar Chart Code
+df1 = data.frame(name = &quot;Les Amis Restaurant&quot;, likes = 1142, talking = 32, here = 1218)
+
+gvisBarChart(df1, options = list(width = 350, height = 280, title = &quot;Quick Facebook Stats for Les Amis Restaurant&quot;, 
+    backgroundColor = &quot;#ffffff&quot;, hAxis = &quot;{title:&#39;Numbers&#39;, titleTextStyle:{color:&#39;blue&#39;}}&quot;, 
+    vAxis = &quot;{title:&#39;Stats&#39;, titleTextStyle:{color:&#39;blue&#39;}}&quot;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Conclusion</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The app can be found on shinyapps.io at the following <a href="https://pcommodore.shinyapps.io/RestaurantsMap/">url</a> :) </p>
 
   </article>
   <!-- Presenter Notes -->
@@ -76,14 +203,44 @@
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title='Read-And-Delete'>
+        data-slide=1 title='Overview'>
          1
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Slide 2'>
+        data-slide=2 title='Data Extraction'>
          2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Data Presentation I'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Data Presentation II'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Data Analysis I'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Data Analysis II'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Conclusion'>
+         7
       </a>
     </li>
   </ul>
