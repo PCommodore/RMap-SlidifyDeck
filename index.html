@@ -86,23 +86,20 @@ getData &lt;- function(rlist = restaurantslist) {
 
 <slide class="" id="slide-3" style="background:;">
   <hgroup>
-    <h2>Data Presentation I</h2>
+    <h2>Data Presentation</h2>
   </hgroup>
   <article data-timings="">
     <p> Data extracted goes into a data frame (restaurantdf) which is subsequently used to plot a map based on their respective latitudes and longitudes. Snippets of the functions restaurantdf() (for converting json to data frame) and plotMapList() (for plotting restaurants and their statuses on map) are as follows. Note that these are just snippets and are meant for display purpose only.</p>
 
 <pre><code class="r">### Data presentation function I - restaurantdf()
-
 restaurantdf &lt;- function() {
+    ### Create data frame from json list
+}
 
-    jsonlist = getData()
-    Sys.setenv(TZ = &quot;Asia/Kuala_Lumpur&quot;)
-    time = Sys.time()
-
-    numofvariables = 39
-    data = matrix(0, length(names(jsonlist)), numofvariables)
-    data = data.frame(data)
-    # ...
+### Data presentation function II - plotMapList()
+plotMapList &lt;- function(dataset = restaurantdf(), mapcenter = c(1.373607, 103.804476), 
+    mapzoom = 11, width = 835, height = 550) {
+    ### Create Leaflet map Add content for popup Add restaurants to map Show map
 }
 </code></pre>
 
@@ -112,86 +109,25 @@ restaurantdf &lt;- function() {
 
 <slide class="" id="slide-4" style="background:;">
   <hgroup>
-    <h2>Data Presentation II</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code class="r">### Data presentation function II - plotMapList()
-
-plotMapList &lt;- function(dataset = restaurantdf(), mapcenter = c(1.373607, 103.804476), 
-    mapzoom = 11, width = 835, height = 550) {
-    mapdf = dataset
-    maplist = toJSONArray2(mapdf, json = F)
-
-    map = Leaflet$new()
-    map$set(width = width, height = height)
-    map$setView(mapcenter, mapzoom)
-
-    ### Add content for popup ...
-
-    ### Add restaurants to map ...
-
-    ### Show Map ...
-}
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-5" style="background:;">
-  <hgroup>
-    <h2>Data Analysis I</h2>
+    <h2>Data Analysis</h2>
   </hgroup>
   <article data-timings="">
     <p> As part of the data analysis module, the googleVis package is used for displaying charts and time series graph so as to facilitate further data exploration and analysis.</p>
 
-<pre><code class="r"># Require googleVis
-library(googleVis)
+<pre><code>###Sample Bar Chart Code
+df1 = data.frame(name=&#39;Les Amis Restaurant&#39;,
+                   likes= 1142,
+                   talking= 32,
+                   here= 1218)
+
+gvisBarChart(df1,options=list(width=350,height=280,
+title = &quot;Quick Facebook Stats&quot;,
+backgroundColor=&quot;#ffffff&quot;,
+hAxis=&quot;{title:&#39;Numbers&#39;,titleTextStyle:{color:&#39;blue&#39;}}&quot;,
+vAxis=&quot;{title:&#39;Stats&#39;,titleTextStyle:{color:&#39;blue&#39;}}&quot;
+))
+
 </code></pre>
-
-<pre><code>## 
-## Welcome to googleVis version 0.5.2
-## 
-## Please read the Google API Terms of Use
-## before you use the package:
-## https://developers.google.com/terms/
-## 
-## Note, the plot method of googleVis will by default use
-## the standard browser to display its output.
-## 
-## See the googleVis package vignettes for more details.
-## 
-## To suppress the this message use:
-## suppressPackageStartupMessages(library(googleVis))
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-6" style="background:;">
-  <hgroup>
-    <h2>Data Analysis II</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code class="r">### Sample Bar Chart Code
-df1 = data.frame(name = &quot;Les Amis Restaurant&quot;, likes = 1142, talking = 32, here = 1218)
-
-gvisBarChart(df1, options = list(width = 350, height = 280, title = &quot;Quick Facebook Stats&quot;, 
-    backgroundColor = &quot;#ffffff&quot;, hAxis = &quot;{title:&#39;Numbers&#39;, titleTextStyle:{color:&#39;blue&#39;}}&quot;, 
-    vAxis = &quot;{title:&#39;Stats&#39;, titleTextStyle:{color:&#39;blue&#39;}}&quot;))
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-7" style="background:;">
-  <hgroup>
-    <h2>Conclusion</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>The app can be found on shinyapps.io at the following <a href="https://pcommodore.shinyapps.io/RestaurantsMap/">url</a> :) </p>
 
   </article>
   <!-- Presenter Notes -->
@@ -215,32 +151,14 @@ gvisBarChart(df1, options = list(width = 350, height = 280, title = &quot;Quick 
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='Data Presentation I'>
+        data-slide=3 title='Data Presentation'>
          3
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title='Data Presentation II'>
+        data-slide=4 title='Data Analysis'>
          4
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=5 title='Data Analysis I'>
-         5
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='Data Analysis II'>
-         6
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Conclusion'>
-         7
       </a>
     </li>
   </ul>
